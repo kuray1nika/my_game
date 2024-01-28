@@ -195,7 +195,8 @@ class Login:
                     self.is_running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    print('Логин: ', self.login_text)
+                    self.open_game = True
+                    self.is_running = False
                 elif event.key == pygame.K_BACKSPACE:
                     self.login_text = self.login_text[:-1]
                 else:
