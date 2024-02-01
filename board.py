@@ -11,6 +11,7 @@ correct = ''
 
 class Instruction:
     def __init__(self):
+        # Переменная для перехода на следуэщее окно
         self.next_step = False
         pygame.init()
         self.screen_width = 800
@@ -24,10 +25,11 @@ class Instruction:
         self.table_data = [
             {'image': 'a.png', 'text': 'Цель игры: собрать слово'},
             {'image': 'а.png', 'text': 'С помощью ракеты собирайте буквы'},
-            {'image': 'pngegg.png', 'text': 'Такой астеройд стирает всё набранное слово'},
-            {'image': '5.png', 'text': 'Небольшие астеройды стирают от 1 до 5 букв'},
+            {'image': 'pngegg.png', 'text': 'Такой астероид стирает всё набранное слово'},
+            {'image': '5.png', 'text': 'Небольшие астероиды стирают от 1 до 5 букв'},
             {'image': 'wormhole.png', 'text': 'Если врезаться в черные дыры, игра закончится'}
         ]
+        # Кнопка дальше
         self.button_text = 'Дальше'
         self.button_font = pygame.font.Font(None, 32)
         self.button_color = (0, 255, 0)
@@ -38,6 +40,7 @@ class Instruction:
         self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
 
     def run(self):
+        # Работа программы
         while self.is_running:
             self.handle_events()
             self.draw()
@@ -48,38 +51,34 @@ class Instruction:
             if event.type == pygame.QUIT:
                 self.is_running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Нажата кнопка дальше
                 if self.button_rect.collidepoint(event.pos):
                     self.next_step = True
                     self.is_running = False
 
     def draw(self):
+        # Отрисовка
         self.screen.blit(self.background_img, (0, 0))
-
         table_x = 100
         table_y = 100
         row_height = 80
-        padding = 20
-
+        # Отрисовка таблицы
         for i, data in enumerate(self.table_data):
             image_path = data['image']
             text = data['text']
-
             image = pygame.image.load(os.path.join('data', image_path))
             image = pygame.transform.scale(image, (60, 60))
             self.screen.blit(image, (table_x, table_y + i * row_height))
-
             text_surface = self.font.render(text, True, (255, 255, 255))
             text_rect = text_surface.get_rect()
             text_rect.topleft = (table_x + 80, table_y + i * row_height + 10)
             self.screen.blit(text_surface, text_rect)
-
         pygame.draw.rect(self.screen, self.button_color, self.button_rect)
-
+        # Отрисовка кнопки
         button_text_surface = self.button_font.render(self.button_text, True, (255, 255, 255))
         button_text_rect = button_text_surface.get_rect()
         button_text_rect.center = self.button_rect.center
         self.screen.blit(button_text_surface, button_text_rect)
-
         pygame.display.update()
         self.clock.tick(60)
 
@@ -133,7 +132,6 @@ class Rating:
         self.elapsed_time = t
         minutes, seconds = divmod(self.elapsed_time, 60)
         hours, minutes = divmod(minutes, 60)
-
         self.time_str = '{:02d}:{:02d}:{:02d}'.format(int(hours), int(minutes), int(seconds))
         return self.time_str
 
@@ -197,20 +195,16 @@ class Rating:
                                         (255, 255, 255))
         text_rect = text_surface.get_rect(center=(self.width // 1.9, 70))
         self.window.blit(text_surface1, text_rect)
-
         for i, (login, result_time) in enumerate(self.login_time_data):
             login_surface = self.font.render(login, True, (255, 255, 255))
             time_surface = self.font.render(result_time, True, (255, 255, 255))
-
             login_rect = login_surface.get_rect(topleft=(300, 100 + i * 30))
             time_rect = time_surface.get_rect(topright=(self.width - 300, 100 + i * 30))
-
             self.window.blit(login_surface, login_rect)
             self.window.blit(time_surface, time_rect)
         # Отрисовка кнопок
         pygame.draw.rect(self.window, (0, 0, 255), self.blue_button_rect)
         pygame.draw.rect(self.window, (0, 255, 0), self.green_button_rect)
-
         # Написание текста на кнопках
         font = pygame.font.Font(None, 24)
         blue_button_text = font.render('Играть снова', True, (255, 255, 255))
@@ -228,22 +222,18 @@ class Login:
         # Размеры окна
         self.width = 800
         self.height = 400
-
         # Создание окна
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('Registration')
-
         # Загрузка фонового изображения
         image_path = os.path.join('data', 'background.png')
         self.background_image = pygame.image.load(image_path).convert()
-
         # Создание поля ввода
         self.text_input_rect = pygame.Rect((self.width - 300) // 2, (self.height - 40) // 2, 300, 40)
         self.is_text_input_active = False
         self.login_text = ''
         self.open_game = False
         self.login_text = ''
-
         # Создание кнопки
         self.button_rect = pygame.Rect(self.width - 150, self.height - 75, 100, 50)
 
@@ -300,8 +290,6 @@ class Login:
         pygame.draw.rect(self.win, (0, 255, 0), self.button_rect)
         button_text = font.render('Войти', True, (255, 255, 255))
         self.win.blit(button_text, (self.button_rect.x + 15, self.button_rect.y + 15))
-
-        # Обновление экрана
         pygame.display.flip()
 
 
@@ -341,12 +329,10 @@ class UltraWin:
 
             # Отрисовка фонового изображения
             self.win.blit(self.background_image, (0, 0))
-
             # Отрисовка текста по середине
             text_rect = self.text.get_rect(center=(self.width // 2, self.height // 2))
             self.win.blit(self.text, text_rect)
             pygame.draw.rect(self.win, (0, 255, 0), self.green_button_rect)
-
             # Отрисовка текста на кнопках
             font = pygame.font.Font(None, 24)
             green_button_text = font.render('Закрыть', True, (255, 255, 255))
@@ -362,16 +348,13 @@ class Lose:
         self.height = 400
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('Lose')
-
         # Загрузка фонового изображения
         image_path = os.path.join('data', 'background.png')
         self.background_image = pygame.image.load(image_path).convert()
-
         # Вывод текста
         font = pygame.font.Font(None, 36)
         self.text = font.render('Вы проиграли! Перепройдите этот уровень', True,
                                 (255, 255, 255))
-
         # Создание кнопок
         self.blue_button_rect = pygame.Rect(100, self.height - 100, 150, 50)
         self.green_button_rect = pygame.Rect(self.width - 250, self.height - 100, 150, 50)
@@ -404,14 +387,11 @@ class Lose:
 
             # Отрисовка фонового изображения
             self.win.blit(self.background_image, (0, 0))
-
             # Отрисовка текста по середине
             text_rect = self.text.get_rect(center=(self.width // 2, self.height // 2))
             self.win.blit(self.text, text_rect)
-
             # Отрисовка кнопок
             pygame.draw.rect(self.win, (0, 0, 255), self.blue_button_rect)
-
             # Отрисовка текста на кнопках
             font = pygame.font.Font(None, 24)
             blue_button_text = font.render('Играть снова', True, (255, 255, 255))
@@ -470,7 +450,6 @@ class StartScreen:
         text2 = font.render('Начать играть используя английский язык', True, (255, 255, 255))
         text_rect2 = text2.get_rect(center=self.green_button_rect.center)
         self.screen.blit(text2, text_rect2)
-
         pygame.display.flip()
 
 
@@ -611,7 +590,7 @@ class Wormhole(pygame.sprite.Sprite):
 
 
 class Smallasteroid(pygame.sprite.Sprite):
-    # Астеройды стирающие ограниченное количество букв
+    # астероиды стирающие ограниченное количество букв
     def __init__(self, x, y, number):
         super().__init__()
         self.number = number
@@ -694,14 +673,14 @@ class Board:
         self.create_stars()
         # Создание ракеты
         self.rocket = Rocket(100, 200)
-        # Спрайты букв, астеройдов, черной дыры
+        # Спрайты букв, астероидов, черной дыры
         self.letters = pygame.sprite.Group()
         self.fastletters = pygame.sprite.Group()
         self.asteroids = pygame.sprite.Group()
         self.small_asteroids = pygame.sprite.Group()
         self.wormholes = pygame.sprite.Group()
         self.start_time = time.time()
-        # Установка таймера для запуска букв, астеройдов и черной дыры
+        # Установка таймера для запуска букв, астероидов и черной дыры
         pygame.time.set_timer(pygame.USEREVENT + 1, 1500)
         pygame.time.set_timer(pygame.USEREVENT + 2, 15000)
         pygame.time.set_timer(pygame.USEREVENT + 3, 10000)
@@ -727,7 +706,6 @@ class Board:
             self.update()
             self.draw()
             self.clock.tick(60)
-
         pygame.quit()
         sys.exit()
 
@@ -743,13 +721,13 @@ class Board:
                 letter_sprite = Letter(x, y, letter)
                 self.letters.add(letter_sprite)
             elif event.type == pygame.USEREVENT + 2:
-                # Вышел таймер на создание астеройдов стирающих слово
+                # Вышел таймер на создание астероидов стирающих слово
                 x = random.randint(800, 1600)
                 y = random.randint(50, self.height - 50)
                 asteroid_sprite = Asteroid(x, y)
                 self.asteroids.add(asteroid_sprite)
             elif event.type == pygame.USEREVENT + 3:
-                # Вышел таймер на создание астеройдов стирающих буквы
+                # Вышел таймер на создание астероидов стирающих буквы
                 number = random.choice(list(number_asterois.keys()))
                 x = random.randint(800, 1600)
                 y = random.randint(50, self.height - 50)
@@ -773,11 +751,10 @@ class Board:
         for star in self.stars:
             star.update()  # Обновление позиции звезды
             if star.x < -10:  # Если звезда вышла за пределы окна
-                star.x = self.width + 10  # Перемещаем звезду за пределы окна справа
-                star.y = random.randint(0, self.height)  # Устанавливаем случайное положение звезды по y
-        keys = pygame.key.get_pressed()  # Получаем все нажатые клавиши
-        self.rocket.update(keys)  # Обновляем положение ракеты
-
+                star.x = self.width + 10  # Перемещение звезду за пределы окна справа
+                star.y = random.randint(0, self.height)  # Установление случайное положение звезды по y
+        keys = pygame.key.get_pressed()  # Получение все нажатые клавиши
+        self.rocket.update(keys)  # Обновление положение ракеты
         for letter in self.letters:
             # Если ракета пересеклась с буквой
             if pygame.sprite.collide_rect(self.rocket, letter):
@@ -791,13 +768,13 @@ class Board:
                 fastletter.kill()
         self.fastletters.update()
         for asteroid in self.asteroids:
-            # Если ракета пересеклась с астеройдом,стирающим слово
+            # Если ракета пересеклась с астероидом,стирающим слово
             if pygame.sprite.collide_rect(self.rocket, asteroid):
                 self.rocket.word = ''
                 asteroid.kill()
         self.asteroids.update()
         for small_asteroid in self.small_asteroids:
-            # Если ракета пересеклась с астеройдом, стирающим буквы
+            # Если ракета пересеклась с астероидом, стирающим буквы
             if pygame.sprite.collide_rect(self.rocket, small_asteroid):
                 try:
                     self.rocket.word = self.rocket.word[:-int(small_asteroid.number)]
@@ -814,14 +791,10 @@ class Board:
         self.wormholes.update()
 
     def draw(self):
-        self.screen.fill((0, 0, 0))  # Заливка окна черным цветом
-        # background_image = pygame.image.load(os.path.join('data', 'sky.png'))
-        # self.screen.blit(background_image, (0, 0))
+        self.screen.fill((0, 0, 0))
         for star in self.stars:
             pygame.draw.circle(self.screen, (255, 255, 255), (star.x, star.y), 2)  # Отрисовка звезды
-        # self.rocket = Rocket(100, 200)
         self.screen.blit(self.rocket.image, self.rocket.rect)  # Отображение спрайта ракеты
-
         for letter in self.letters:
             # Отрисовка спрайтов букв
             self.screen.blit(letter.image, letter.rect)
@@ -829,10 +802,10 @@ class Board:
             # Отрисовка спрайтов букв
             self.screen.blit(fastletter.image, fastletter.rect)
         for asteroid in self.asteroids:
-            # Отрисовка спрайтов астеройдов, стирающих слово
+            # Отрисовка спрайтов астероидов, стирающих слово
             self.screen.blit(asteroid.image, asteroid.rect)
         for small_asteroid in self.small_asteroids:
-            # Отрисовка спрайтов астеройдов. стирающих буквы
+            # Отрисовка спрайтов астероидов. стирающих буквы
             self.screen.blit(small_asteroid.image, small_asteroid.rect)
         for wormhole in self.wormholes:
             # Отрисовка спрайтов черные дыры
@@ -842,7 +815,6 @@ class Board:
         word_text = font.render(self.rocket.word, True, (225, 0, 0))
         word_rect = word_text.get_rect(center=(self.width // 2, self.height - self.height + 20))
         self.screen.blit(word_text, word_rect)
-
         correct_text = font.render(correct, True, (225, 0, 0))
         correct_rect = correct_text.get_rect(bottomleft=(10, self.height - 10))
         self.screen.blit(correct_text, correct_rect)
@@ -850,7 +822,6 @@ class Board:
         current_time = time.time()
         # вычисляем прошедшее время
         self.game_time = current_time - self.start_time
-
         pygame.display.flip()
 
 
