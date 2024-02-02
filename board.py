@@ -867,7 +867,6 @@ if __name__ == '__main__':
                     con.close()
                     number_asterois = {'1': '1.png', '2': '2.png', '3': '3.png', '4': '4.png'}
                     correct = random.choice(result)
-                    correct = correct.capitalize()
                     # Запуск игры
                     board = Board(800, 400)
                     board.run()
