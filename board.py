@@ -7,6 +7,139 @@ import time
 
 word = ''
 correct = ''
+word_trans = ''
+
+
+class Advertisement:
+    def __init__(self):
+        # Переменная для перехода на следующее окно
+        self.next_step = False
+        pygame.init()
+        self.screen_width = 800
+        self.screen_height = 600
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        pygame.display.set_caption('Advertisement')
+        self.clock = pygame.time.Clock()
+        self.is_running = True
+        self.font = pygame.font.Font(None, 30)
+        self.background_img = pygame.image.load(os.path.join('data', 'background.png'))
+        # Вывод текста
+        font = pygame.font.Font(None, 36)
+        self.text = font.render(f'Здесь могла быть ваша реклама', True,
+                                (255, 255, 255))
+        # Кнопка дальше
+        self.button_text = 'Пропустить'
+        self.button_font = pygame.font.Font(None, 32)
+        self.button_color = (0, 255, 0)
+        self.button_width = 200
+        self.button_height = 50
+        self.button_x = self.screen_width - self.button_width - 20
+        self.button_y = self.screen_height - self.button_height - 20
+        self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
+
+    def run(self):
+        # Работа программы
+        while self.is_running:
+            self.handle_events()
+            self.draw()
+        pygame.quit()
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            # if event.type == pygame.QUIT:
+            #     self.is_running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Нажата кнопка дальше
+                if self.button_rect.collidepoint(event.pos):
+                    self.next_step = True
+                    self.is_running = False
+
+    def draw(self):
+        # Отрисовка
+        self.screen.blit(self.background_img, (0, 0))
+        table_x = 100
+        table_y = 100
+        row_height = 80
+        # Отрисовка таблицы
+        text_rect = self.text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+        self.screen.blit(self.text, text_rect)
+        pygame.draw.rect(self.screen, self.button_color, self.button_rect)
+        # Отрисовка кнопки
+        button_text_surface = self.button_font.render(self.button_text, True, (255, 255, 255))
+        button_text_rect = button_text_surface.get_rect()
+        button_text_rect.center = self.button_rect.center
+        self.screen.blit(button_text_surface, button_text_rect)
+        pygame.display.update()
+        self.clock.tick(60)
+
+
+class WordTranslation:
+    def __init__(self):
+        # Переменная для перехода на следующее окно
+        self.next_step = False
+        pygame.init()
+        self.screen_width = 800
+        self.screen_height = 600
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        pygame.display.set_caption('Word Translation')
+        self.clock = pygame.time.Clock()
+        self.is_running = True
+        self.font = pygame.font.Font(None, 30)
+        self.background_img = pygame.image.load(os.path.join('data', 'background.png'))
+        # Вывод текста
+        font = pygame.font.Font(None, 36)
+        self.text = font.render(f'"{correct.capitalize()}" переводится как "{word_trans.capitalize()}"', True,
+                                (255, 255, 255))
+        # Кнопка дальше
+        self.button_text = 'Дальше'
+        self.button_font = pygame.font.Font(None, 32)
+        self.button_color = (0, 255, 0)
+        self.button_width = 200
+        self.button_height = 50
+        self.button_x = self.screen_width - self.button_width - 20
+        self.button_y = self.screen_height - self.button_height - 20
+        self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
+
+    def run(self):
+        # Работа программы
+        while self.is_running:
+            self.handle_events()
+            self.draw()
+        pygame.quit()
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            # if event.type == pygame.QUIT:
+            #     self.is_running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Нажата кнопка дальше
+                if self.button_rect.collidepoint(event.pos):
+                    self.next_step = True
+                    self.is_running = False
+
+    def draw(self):
+        # Отрисовка
+        self.screen.blit(self.background_img, (0, 0))
+        table_x = 100
+        table_y = 100
+        row_height = 80
+        # Отрисовка таблицы
+        text_rect = self.text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+        self.screen.blit(self.text, text_rect)
+        pygame.draw.rect(self.screen, self.button_color, self.button_rect)
+        # Отрисовка кнопки
+        button_text_surface = self.button_font.render(self.button_text, True, (255, 255, 255))
+        button_text_rect = button_text_surface.get_rect()
+        button_text_rect.center = self.button_rect.center
+        self.screen.blit(button_text_surface, button_text_rect)
+        pygame.display.update()
+        self.clock.tick(60)
 
 
 class Instruction:
@@ -137,6 +270,7 @@ class Rating:
 
     def handle_events(self):
         global correct
+        global word_trans
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -144,21 +278,30 @@ class Rating:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Реакция на клик мышкой на кнопку
                 if self.blue_button_rect.collidepoint(event.pos):
-                    # Если это синяя кнопка - перепройти уровень. Получение данных из бызы данных
+                    # Если это синяя кнопка - перепройти уровень. Получение данных из базы данных
                     con = sqlite3.connect('my_game_database1')
                     cur = con.cursor()
                     result = cur.execute(
                         f'''SELECT word FROM {game_start_screen.lang}
                         WHERE level = {game_start_screen2.level}''').fetchall()
-                    result = [''.join(el) for el in result]
                     con.commit()
+                    result = [''.join(el) for el in result]
                     try:
                         # Выбор слова для игры
                         correct = random.choice(result)
                     except IndexError:
                         u = UltraWin()
                         u.run()
+                    word_trans = cur.execute(
+                        f'''SELECT trans FROM "{game_start_screen.lang}" WHERE word = "{correct}"''').fetchone()
+                    con.commit()
+                    word_trans = word_trans[0]
+                    con.commit()
                     con.close()
+                    translation = WordTranslation()
+                    translation.run()
+                    ad = Advertisement()
+                    ad.run()
                     b = Board(800, 400)
                     b.run()
                 elif self.green_button_rect.collidepoint(event.pos):
@@ -170,7 +313,6 @@ class Rating:
                         f'''SELECT word FROM {game_start_screen.lang}
                         WHERE level = {game_start_screen2.level}''').fetchall()
                     result = [''.join(el) for el in result]
-                    con.commit()
                     try:
                         # Выбор слова для игры
                         correct = random.choice(result)
@@ -178,7 +320,15 @@ class Rating:
                         # Нет следующего уровня
                         u = UltraWin()
                         u.run()
+                    word_trans = cur.execute(
+                        f'''SELECT trans FROM "{game_start_screen.lang}" WHERE word = "{correct}"''').fetchone()
+                    con.commit()
                     con.close()
+                    word_trans = word_trans[0]
+                    ad = Advertisement()
+                    ad.run()
+                    translation = WordTranslation()
+                    translation.run()
                     b = Board(800, 400)
                     b.run()
 
@@ -192,7 +342,7 @@ class Rating:
         self.window.blit(text_surface, text_rect)
         # Вывод лучших прохождений этого уровня
         text_surface1 = self.font.render(f'Лучшие результаты:', True,
-                                        (255, 255, 255))
+                                         (255, 255, 255))
         text_rect = text_surface.get_rect(center=(self.width // 1.9, 70))
         self.window.blit(text_surface1, text_rect)
         for i, (login, result_time) in enumerate(self.login_time_data):
@@ -361,6 +511,7 @@ class Lose:
 
     def run(self):
         global correct
+        global word_trans
         # Работа программы
         while True:
             for event in pygame.event.get():
@@ -376,8 +527,15 @@ class Lose:
                             result = cur.execute(
                                 f'''SELECT word FROM {game_start_screen.lang} WHERE level = {game_start_screen2.level}''').fetchall()
                             result = [''.join(el) for el in result]
-                            con.commit()
                             correct = random.choice(result)
+                            word_trans = cur.execute(
+                                f'''SELECT trans FROM "{game_start_screen.lang}" WHERE word = "{correct}"''').fetchone()
+                            con.commit()
+                            word_trans = word_trans[0]
+                            ad = Advertisement()
+                            ad.run()
+                            translation = WordTranslation()
+                            translation.run()
                             con.close()
                             b = Board(800, 400)
                             b.run()
@@ -815,7 +973,7 @@ class Board:
         word_text = font.render(self.rocket.word, True, (225, 0, 0))
         word_rect = word_text.get_rect(center=(self.width // 2, self.height - self.height + 20))
         self.screen.blit(word_text, word_rect)
-        correct_text = font.render(correct, True, (225, 0, 0))
+        correct_text = font.render(correct.lower(), True, (225, 0, 0))
         correct_rect = correct_text.get_rect(bottomleft=(10, self.height - 10))
         self.screen.blit(correct_text, correct_rect)
         # текущее время
@@ -839,17 +997,21 @@ if __name__ == '__main__':
             game_start_screen.run()
             if not game_start_screen.do_not_open:
                 if game_start_screen.lang == 'ru':
-                    alphabet_images = {'А': 'а.png', 'Б': 'б.png', 'В': 'в.png', 'Г': 'г.png', 'Д': 'д.png', 'Е': 'е.png',
-                                       'Ж': 'ж.png', 'З': 'з.png', 'И': 'и.png', 'Й': 'й.png', 'К': 'к.png', 'Л': 'л.png',
+                    alphabet_images = {'А': 'а.png', 'Б': 'б.png', 'В': 'в.png', 'Г': 'г.png', 'Д': 'д.png',
+                                       'Е': 'е.png',
+                                       'Ж': 'ж.png', 'З': 'з.png', 'И': 'и.png', 'Й': 'й.png', 'К': 'к.png',
+                                       'Л': 'л.png',
                                        'М': 'м.png', 'Н': 'н.png', 'О': 'о.png', 'П': 'п.png', 'Р': 'р.png',
                                        'С': 'с.png', 'Т': 'т.png', 'У': 'у.png', 'Ф': 'ф.png', 'Х': 'х.png',
                                        'Ц': 'ц.png', 'Ч': 'ч.png', 'Ш': 'ш.png', 'Щ': 'щ.png', 'Ъ': 'ъ.png',
                                        'Ы': 'ы.png', 'Ь': 'ь.png', 'Э': 'э.png', 'Ю': 'ю.png', 'Я': 'я.png'}
                 else:
-                    alphabet_images = {'A': 'a.png', 'B': 'b.png', 'C': 'c.png', 'D': 'd.png', 'E': 'e.png', 'F': 'f.png',
+                    alphabet_images = {'A': 'a.png', 'B': 'b.png', 'C': 'c.png', 'D': 'd.png', 'E': 'e.png',
+                                       'F': 'f.png',
                                        'G': 'g.png',
                                        'H': 'h.png', 'I': 'i.png', 'J': 'j.png', 'K': 'k.png',
-                                       'L': 'l.png', 'M': 'm.png', 'N': 'n.png', 'O': 'o.png', 'P': 'p.png', 'Q': 'q.png',
+                                       'L': 'l.png', 'M': 'm.png', 'N': 'n.png', 'O': 'o.png', 'P': 'p.png',
+                                       'Q': 'q.png',
                                        'R': 'r.png',
                                        'S': 's.png', 'T': 't.png', 'U': 'u.png', 'V': 'v.png', 'W': 'w.png',
                                        'X': 'x.png', 'Y': 'y.png', 'Z': 'z.png'}
@@ -863,10 +1025,15 @@ if __name__ == '__main__':
                         f'''SELECT word FROM {game_start_screen.lang}
                         WHERE level = {game_start_screen2.level}''').fetchall()
                     result = [''.join(el) for el in result]
-                    con.commit()
-                    con.close()
                     number_asterois = {'1': '1.png', '2': '2.png', '3': '3.png', '4': '4.png'}
                     correct = random.choice(result)
+                    word_trans = cur.execute(
+                        f'''SELECT trans FROM "{game_start_screen.lang}" WHERE word = "{correct}"''').fetchone()
+                    con.commit()
+                    con.close()
+                    word_trans = word_trans[0]
+                    translation = WordTranslation()
+                    translation.run()
                     # Запуск игры
                     board = Board(800, 400)
                     board.run()
